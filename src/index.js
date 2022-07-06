@@ -1,6 +1,10 @@
 import React from "react";
-import { render } from "react-dom";
+
 import { DataTables } from "./lib";
+import { createRoot } from "react-dom/client";
+
+const container = document.getElementById("root");
+const root = createRoot(container);
 
 const App = () => (
   <div>
@@ -8,4 +12,4 @@ const App = () => (
   </div>
 );
 
-render(<App />, document.getElementById("root"));
+root.render(<App />);

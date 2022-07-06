@@ -40,16 +40,15 @@ const DataTables = () => {
             .filter((item) =>
               item.firstName.toLowerCase().includes(valueSearch)
             )
-            .map((item, index) => {
+            .map((item) => {
+              return Object.values(item);
+            })
+            .map((items, index) => {
               return (
                 <tr key={index}>
-                  <td>
-                    {item.firstName} {item.lastName}
-                  </td>
-                  <td>{item.dateOfBirth}</td>
-                  <td>{item.street}</td>
-                  <td>{item.startDay}</td>
-                  <td>{item.department}</td>
+                  {items.map((item, index) => {
+                    return <td key={index}>{item}</td>;
+                  })}
                 </tr>
               );
             })

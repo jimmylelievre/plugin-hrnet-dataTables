@@ -56,7 +56,7 @@ export const tableItem = [
     zipCode: "42100",
   },
   {
-    firstName: "Jimmy",
+    firstName: "bernard",
     lastName: "Lelievre",
     startDay: "13 fevrier 2010",
     department: "Sales",
@@ -67,7 +67,7 @@ export const tableItem = [
     zipCode: "42100",
   },
   {
-    firstName: "Jimmy",
+    firstName: "luc",
     lastName: "Lelievre",
     startDay: "13 fevrier 2010",
     department: "Sales",

@@ -8,7 +8,9 @@ const root = createRoot(container);
 
 const App = () => (
   <div>
-    <DataTables />
+    <React.StrictMode>
+      <DataTables />
+    </React.StrictMode>
   </div>
 );
 

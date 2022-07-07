@@ -4,10 +4,9 @@ import "./DataTables.css";
 import PaginationComponent from "./Pagination";
 
 const DataTables = () => {
-  const [valueSelect, setValueSelect] = useState(5);
   const [valueSearch, setValueSearch] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-  const [postsPerPage] = useState(3);
+  const [postsPerPage, setPostsPerPage] = useState(5);
 
   // Get current posts
   const indexOfLastPost = currentPage * postsPerPage;
@@ -42,10 +41,10 @@ const DataTables = () => {
             setValueSearch(e.target.value.toLowerCase());
           }}
         />
-        <p> Show {valueSelect} entries</p>
+        <p> Show {postsPerPage} entries</p>
         <select
           onChange={(e) => {
-            setValueSelect(e.target.value);
+            setPostsPerPage(parseInt(e.target.value));
           }}
         >
           <option value="5">5</option>
@@ -77,7 +76,7 @@ const DataTables = () => {
                 </tr>
               );
             })
-            .filter((item) => parseInt(item.key) < valueSelect)}
+            .filter((item) => parseInt(item.key) < postsPerPage)}
         </tbody>
       </table>
       <PaginationComponent

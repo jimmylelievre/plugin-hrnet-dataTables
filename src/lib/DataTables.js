@@ -4,31 +4,32 @@ import "./DataTables.css";
 import PaginationComponent from "./Pagination";
 
 const DataTables = () => {
-  const [valueSearch, setValueSearch] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [postsPerPage, setPostsPerPage] = useState(5);
+  const [data, setData] = useState(tableItem);
 
   // Get current posts
   const indexOfLastPost = currentPage * postsPerPage;
   const indexOfFirstPost = indexOfLastPost - postsPerPage;
-  const currentPosts = tableItem.slice(indexOfFirstPost, indexOfLastPost);
+  const currentPosts = data.slice(indexOfFirstPost, indexOfLastPost);
 
   // Change page
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
-  const filterSearch = (item, valueSearch) => {
-    /* let searchFirstName = item.firstName.toLowerCase().includes(valueSearch);
-    let searchLastName = item.lastName.toLowerCase().includes(valueSearch);
-    if (searchFirstName) return true;
-    if (searchLastName) return true; */
-    const columns = Object.values(item);
-    console.log(columns);
-
-    const search = columns.map((item) => {
-      console.log(item);
-      return item.toLowerCase().toString().includes(valueSearch);
-    });
-    if (search) return true;
+  const getFilteredItems = (value) => {
+    if (!value) {
+      return setData(tableItem);
+    } else {
+      const newData = [];
+      tableItem.forEach((object) => {
+        Object.keys(object).forEach((key) => {
+          if (object[key].toLowerCase().includes(value)) {
+            if (!newData.includes(object)) return newData.push(object);
+          }
+        });
+      });
+      setData(newData);
+    }
   };
 
   return (
@@ -38,19 +39,23 @@ const DataTables = () => {
           type="search"
           placeholder="Search"
           onChange={(e) => {
-            setValueSearch(e.target.value.toLowerCase());
+            getFilteredItems(e.target.value.toLowerCase());
           }}
         />
-        <p> Show {postsPerPage} entries</p>
-        <select
-          onChange={(e) => {
-            setPostsPerPage(parseInt(e.target.value));
-          }}
-        >
-          <option value="5">5</option>
-          <option value="10">10</option>
-          <option value="15">15</option>
-        </select>
+
+        <div>
+          Show
+          <select
+            onChange={(e) => {
+              setPostsPerPage(parseInt(e.target.value));
+            }}
+          >
+            <option value="5">5</option>
+            <option value="10">10</option>
+            <option value="15">15</option>
+          </select>
+          entries
+        </div>
       </div>
       <table>
         <thead>
@@ -62,8 +67,6 @@ const DataTables = () => {
         </thead>
         <tbody>
           {currentPosts
-
-            .filter((item) => filterSearch(item, valueSearch))
             .map((item) => {
               return Object.values(item);
             })
@@ -79,11 +82,17 @@ const DataTables = () => {
             .filter((item) => parseInt(item.key) < postsPerPage)}
         </tbody>
       </table>
-      <PaginationComponent
-        postsPerPage={postsPerPage}
-        totalPosts={tableItem.length}
-        paginate={paginate}
-      />
+      <div className="footer-table">
+        <p>
+          Showing {indexOfFirstPost + 1} to{" "}
+          {currentPosts.length + indexOfFirstPost} of {data.length} entries
+        </p>
+        <PaginationComponent
+          postsPerPage={postsPerPage}
+          totalPosts={data.length}
+          paginate={paginate}
+        />
+      </div>
     </div>
   );
 };

@@ -1,10 +1,22 @@
 table {
-  width: 900px;
+  width: 100%;
   margin-top: 30px;
   text-align: left;
+  border-collapse: collapse;
 }
-td {
-  padding-top: 30px;
+.table {
+  margin: 30px;
+}
+td,
+th {
+  padding: 15px;
+}
+thead {
+  border-bottom: solid 1px #cacaca85;
+}
+tr {
+  border-bottom: solid 1px #cacaca85;
+  padding-bottom: 10px;
 }
 .line {
   position: absolute;
@@ -23,4 +35,15 @@ input {
   width: 500px;
   height: 30px;
   padding: 20px;
+}
+.footer-table {
+  display: flex;
+  justify-content: space-between;
+  margin: 20px;
+}
+select {
+  margin-left: 5px;
+  margin-right: 5px;
+  border: none;
+  outline: none;
 }

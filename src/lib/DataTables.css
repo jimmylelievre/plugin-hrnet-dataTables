@@ -18,6 +18,9 @@ tr {
   border-bottom: solid 1px #cacaca85;
   padding-bottom: 10px;
 }
+th {
+  cursor: pointer;
+}
 .line {
   position: absolute;
   border: 1px solid #cacaca85;

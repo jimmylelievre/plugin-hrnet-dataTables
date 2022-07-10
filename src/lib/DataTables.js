@@ -119,6 +119,7 @@ const DataTables = () => {
           postsPerPage={postsPerPage}
           totalPosts={data.length}
           paginate={paginate}
+          currentPage={currentPage}
         />
       </div>
     </div>

@@ -52,6 +52,7 @@ input {
   display: flex;
   justify-content: space-between;
   margin: 20px;
+  align-items: center;
 }
 select {
   margin-left: 5px;

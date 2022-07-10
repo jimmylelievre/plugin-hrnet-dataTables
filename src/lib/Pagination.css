@@ -7,8 +7,15 @@ li {
   cursor: pointer;
   border: 1px solid gray;
   margin: 5px;
+  border-radius: 5px;
 }
 a {
   text-decoration: none;
   color: black;
+}
+.active {
+  background-color: rgba(141, 155, 83, 0.83);
+}
+.active-a {
+  color: white;
 }

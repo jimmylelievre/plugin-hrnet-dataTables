@@ -1,16 +1,11 @@
 import React, { useState } from "react";
-import { dataHeader, tableItem } from "../dataMock";
 import "./DataTables.css";
 import PaginationComponent from "./Pagination";
 
-const DataTables = () => {
+const DataTables = ({ dataHeader, tableItem }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [postsPerPage, setPostsPerPage] = useState(5);
   const [data, setData] = useState(tableItem);
-  const [order, setOrder] = useState(1);
-  const [activeCategorie, setActiveCategorie] = useState(
-    Object.keys(data[0])[0]
-  );
 
   // Get current posts
   const indexOfLastPost = currentPage * postsPerPage;
@@ -36,20 +31,66 @@ const DataTables = () => {
     }
   };
 
-  const switchCategorie = (categorie) => {
-    return activeCategorie === categorie
-      ? setOrder(order === 1 ? -1 : 1)
-      : setActiveCategorie(categorie);
+  const switchIconOrderCss = (e) => {
+    const order = e.target.dataset.order;
+
+    if (order === "asc") {
+      const rows = document.querySelectorAll("th");
+      rows.forEach((row) => {
+        row.className = "sorting-asc";
+      });
+    }
+    if (order === "desc") {
+      const rows = document.querySelectorAll("th");
+      rows.forEach((row) => {
+        row.className = "sorting-desc";
+      });
+    }
   };
 
-  const sortData = () => {
-    const newData = data.sort((a, b) => {
-      if (!a[activeCategorie]) return -1;
-      if (!b[activeCategorie]) return 1;
-      return a[activeCategorie].localeCompare(b[activeCategorie]);
-    });
-    return setData([...newData]);
+  const switchOrder = (e) => {
+    const column = e.target.dataset.column;
+    const order = e.target.dataset.order;
+
+    if (order === "asc") {
+      e.target.dataset.order = "desc";
+      const newData = [...data].sort((a, b) =>
+        a[column].toLowerCase() > b[column].toLowerCase() ? 1 : -1
+      );
+      setData(newData);
+    }
+    if (order === "desc") {
+      e.target.dataset.order = "asc";
+      const newData = [...data].sort((a, b) =>
+        a[column].toLowerCase() < b[column].toLowerCase() ? 1 : -1
+      );
+      setData(newData);
+    }
   };
+
+  const tableData = currentPosts.map((row, index) => {
+    let rowData = [];
+    let i = 0;
+
+    for (const key in row) {
+      rowData.push({
+        key: dataHeader[i],
+        val: row[key],
+      });
+      i++;
+    }
+
+    return (
+      <tr key={index}>
+        {rowData.map((data, index) => (
+          <td key={index} data-heading={data.key}>
+            {data.val}
+          </td>
+        ))}
+      </tr>
+    );
+  });
+
   return (
     <div className="table">
       <div className="search-bar">
@@ -61,7 +102,7 @@ const DataTables = () => {
           }}
         />
 
-        <div>
+        <div className="select">
           Show
           <select
             onChange={(e) => {
@@ -75,15 +116,18 @@ const DataTables = () => {
           entries
         </div>
       </div>
+
       <table>
         <thead>
           <tr>
             {dataHeader.map((data, index) => {
               return (
                 <th
-                  onClick={() => {
-                    switchCategorie(data);
-                    sortData();
+                  data-order="desc"
+                  data-column={data.toLowerCase()}
+                  onClick={(e) => {
+                    switchOrder(e);
+                    switchIconOrderCss(e);
                   }}
                   key={index}
                 >
@@ -93,22 +137,7 @@ const DataTables = () => {
             })}
           </tr>
         </thead>
-        <tbody>
-          {currentPosts
-            .map((item) => {
-              return Object.values(item);
-            })
-            .map((items, index) => {
-              return (
-                <tr key={index}>
-                  {items.map((item, index) => {
-                    return <td key={index}>{item}</td>;
-                  })}
-                </tr>
-              );
-            })
-            .filter((item) => parseInt(item.key) < postsPerPage)}
-        </tbody>
+        <tbody>{tableData}</tbody>
       </table>
       <div className="footer-table">
         <p>

@@ -36,17 +36,7 @@ var DataTables = function DataTables(_ref) {
   var _useState5 = (0, _react.useState)(tableItem),
       _useState6 = (0, _slicedToArray2.default)(_useState5, 2),
       data = _useState6[0],
-      setData = _useState6[1];
-
-  var _useState7 = (0, _react.useState)(1),
-      _useState8 = (0, _slicedToArray2.default)(_useState7, 2),
-      order = _useState8[0],
-      setOrder = _useState8[1];
-
-  var _useState9 = (0, _react.useState)(Object.keys(data[0])[0]),
-      _useState10 = (0, _slicedToArray2.default)(_useState9, 2),
-      activeCategorie = _useState10[0],
-      setActiveCategorie = _useState10[1]; // Get current posts
+      setData = _useState6[1]; // Get current posts
 
 
   var indexOfLastPost = currentPage * postsPerPage;
@@ -73,19 +63,69 @@ var DataTables = function DataTables(_ref) {
     }
   };
 
-  var switchCategorie = function switchCategorie(categorie) {
-    return activeCategorie === categorie ? setOrder(order === 1 ? -1 : 1) : setActiveCategorie(categorie);
+  var switchIconOrderCss = function switchIconOrderCss(e) {
+    var order = e.target.dataset.order;
+
+    if (order === "asc") {
+      var rows = document.querySelectorAll("th");
+      rows.forEach(function (row) {
+        row.className = "sorting-asc";
+      });
+    }
+
+    if (order === "desc") {
+      var _rows = document.querySelectorAll("th");
+
+      _rows.forEach(function (row) {
+        row.className = "sorting-desc";
+      });
+    }
   };
 
-  var sortData = function sortData() {
-    var newData = data.sort(function (a, b) {
-      if (!a[activeCategorie]) return -1;
-      if (!b[activeCategorie]) return 1;
-      return a[activeCategorie].localeCompare(b[activeCategorie]);
-    });
-    return setData((0, _toConsumableArray2.default)(newData));
+  var switchOrder = function switchOrder(e) {
+    var column = e.target.dataset.column;
+    var order = e.target.dataset.order;
+
+    if (order === "asc") {
+      e.target.dataset.order = "desc";
+      var newData = (0, _toConsumableArray2.default)(data).sort(function (a, b) {
+        return a[column].toLowerCase() > b[column].toLowerCase() ? 1 : -1;
+      });
+      setData(newData);
+    }
+
+    if (order === "desc") {
+      e.target.dataset.order = "asc";
+
+      var _newData = (0, _toConsumableArray2.default)(data).sort(function (a, b) {
+        return a[column].toLowerCase() < b[column].toLowerCase() ? 1 : -1;
+      });
+
+      setData(_newData);
+    }
   };
 
+  var tableData = currentPosts.map(function (row, index) {
+    var rowData = [];
+    var i = 0;
+
+    for (var key in row) {
+      rowData.push({
+        key: dataHeader[i],
+        val: row[key]
+      });
+      i++;
+    }
+
+    return /*#__PURE__*/_react.default.createElement("tr", {
+      key: index
+    }, rowData.map(function (data, index) {
+      return /*#__PURE__*/_react.default.createElement("td", {
+        key: index,
+        "data-heading": data.key
+      }, data.val);
+    }));
+  });
   return /*#__PURE__*/_react.default.createElement("div", {
     className: "table"
   }, /*#__PURE__*/_react.default.createElement("div", {
@@ -96,7 +136,9 @@ var DataTables = function DataTables(_ref) {
     onChange: function onChange(e) {
       getFilteredItems(e.target.value.toLowerCase());
     }
-  }), /*#__PURE__*/_react.default.createElement("div", null, "Show", /*#__PURE__*/_react.default.createElement("select", {
+  }), /*#__PURE__*/_react.default.createElement("div", {
+    className: "select"
+  }, "Show", /*#__PURE__*/_react.default.createElement("select", {
     onChange: function onChange(e) {
       setPostsPerPage(parseInt(e.target.value));
     }
@@ -108,25 +150,15 @@ var DataTables = function DataTables(_ref) {
     value: "15"
   }, "15")), "entries")), /*#__PURE__*/_react.default.createElement("table", null, /*#__PURE__*/_react.default.createElement("thead", null, /*#__PURE__*/_react.default.createElement("tr", null, dataHeader.map(function (data, index) {
     return /*#__PURE__*/_react.default.createElement("th", {
-      onClick: function onClick() {
-        switchCategorie(data);
-        sortData();
+      "data-order": "desc",
+      "data-column": data.toLowerCase(),
+      onClick: function onClick(e) {
+        switchOrder(e);
+        switchIconOrderCss(e);
       },
       key: index
     }, data);
-  }))), /*#__PURE__*/_react.default.createElement("tbody", null, currentPosts.map(function (item) {
-    return Object.values(item);
-  }).map(function (items, index) {
-    return /*#__PURE__*/_react.default.createElement("tr", {
-      key: index
-    }, items.map(function (item, index) {
-      return /*#__PURE__*/_react.default.createElement("td", {
-        key: index
-      }, item);
-    }));
-  }).filter(function (item) {
-    return parseInt(item.key) < postsPerPage;
-  }))), /*#__PURE__*/_react.default.createElement("div", {
+  }))), /*#__PURE__*/_react.default.createElement("tbody", null, tableData)), /*#__PURE__*/_react.default.createElement("div", {
     className: "footer-table"
   }, /*#__PURE__*/_react.default.createElement("p", null, "Showing ", indexOfFirstPost + 1, " to", " ", currentPosts.length + indexOfFirstPost, " of ", data.length, " entries"), /*#__PURE__*/_react.default.createElement(_Pagination.default, {
     postsPerPage: postsPerPage,

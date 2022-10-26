@@ -15,6 +15,7 @@ const DataTables = ({ dataHeader, tableItem }) => {
   // Change page
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
+  // Search
   const getFilteredItems = (value) => {
     if (!value) {
       return setData(tableItem);

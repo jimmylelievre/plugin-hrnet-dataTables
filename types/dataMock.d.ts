@@ -1,12 +1,12 @@
 export const dataHeader: string[];
 export const tableItem: {
-    firstName: string;
-    lastName: string;
-    startDay: string;
+    firstname: string;
+    lastname: string;
+    start: string;
     department: string;
-    dateOfBirth: string;
+    birth: string;
     street: string;
     city: string;
     state: string;
-    zipCode: string;
+    zipcode: string;
 }[];

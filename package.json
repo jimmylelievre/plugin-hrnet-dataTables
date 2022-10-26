@@ -1,6 +1,6 @@
 {
   "name": "data-tables-plugin-hrnet",
-  "version": "0.0.4",
+  "version": "0.0.7",
   "main": "dist/index.js",
   "module": "dist/index.js",
   "files": [
